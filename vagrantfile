@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|
+	config.vm.define "alouzizi", primary: true do |server|
+	  server.vm.box = "debian/bookworm64"
+	  server.vm.hostname = "alouziziS"
+	  server.vm.network "private_network", ip: "192.168.56.110"
+	  
+	  server.vm.provider "virtualbox" do |vb|
+		vb.memory = 2048
+		vb.cpus = 4
+	  end
+  
+	  server.vm.provision "file", source: '~/.ssh/id_rsa.pub', destination: "~/.ssh/me.pub"
+
+	  server.vm.provision "shell", inline: "mkdir -p /home/vagrant/terraform"
+
+	  server.vm.synced_folder "./terraform", "/home/vagrant/terraform",
+		owner: "vagrant",
+		group: "vagrant",
+		create: true,
+		mount_options: ["dmode=777,fmode=777"]
+  
+	  server.vm.provision "shell", path: "scripts.sh"
+
+	end
+  end
