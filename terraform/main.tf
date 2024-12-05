@@ -11,8 +11,8 @@ terraform {
 }
 
 
-resource "digitalocean_ssh_key" "vagrant_ssh" {
-  name       = "vagrant_ssh"
+resource "digitalocean_ssh_key" "adaifi_ssh" {
+  name       = "adaifi_ssh"
   public_key = file("/home/vagrant/.ssh/id_rsa.pub")
 }
 
@@ -22,18 +22,22 @@ provider "digitalocean" {
 }
 
 #recouces Block
-resource "digitalocean_droplet" "its-me" {
+resource "digitalocean_droplet" "adaifi" {
 	image = "debian-12-x64"
-	name = "its-me"
+	name = "adaifi"
 	region = "nyc3"
 	size = "s-2vcpu-4gb-120gb-intel"
-	ssh_keys = [digitalocean_ssh_key.vagrant_ssh.id]
+	ssh_keys = [digitalocean_ssh_key.adaifi_ssh.id]
 
 	connection {
 		type        = "ssh"
 		user        = "root"
 		private_key = file("/home/vagrant/.ssh/id_rsa")
 		host        = self.ipv4_address
+	}
+
+	provisioner "local-exec" {
+		command = "echo HOST=${self.ipv4_address} >> /home/vagrant/terraform/.env"
 	}
 
 	provisioner "remote-exec" {

@@ -20,6 +20,9 @@ echo \
 
 apt-get update
 
+# install python3
+apt-get install -y python3 python3-pip
+
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -28,7 +31,7 @@ chmod +x install_docker.sh
 
 git clone https://github.com/zenon0777/inception.git
 
-mv .env inception/srcs/.env
+mv /root/.env inception/srcs/.env
 
 cd inception
 
